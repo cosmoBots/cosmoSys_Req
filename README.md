@@ -3,6 +3,14 @@
 Requirements-domain extension for cosmoSys. It requires the base `cosmosys`
 Redmine plugin.
 
+This is not a new project created by this repository. It is a refactoring and
+continuation of the earlier
+[`cosmosys_req_rm`](https://github.com/cosmoBots/cosmosys_req_rm) Redmine
+plugin. That line of development runs from its first commit on 6 August 2019
+through the current 2026 refactoring. The repository history was deliberately
+restarted to publish a clean software artifact; this does not erase or replace
+the project's earlier history and authorship.
+
 This repository contains an early alpha artifact. It is suitable for controlled
 evaluation and is not yet declared production-ready.
 

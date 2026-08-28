@@ -68,7 +68,7 @@ unless Cosmosys::ProjectProfileRegistry.registered?('requirements')
       'requirement_compliance_state' => 'metadata'
     }.freeze,
     default_item_list_columns: %w[
-      tracker status priority subject assigned_to updated_on
+      chapter_label tracker status priority subject assigned_to updated_on
       requirement_type requirement_level requirement_compliance_state
     ].freeze
   )

@@ -1,0 +1,5 @@
+<% if issue.cosmosys_requirement? && issue.editable?(User.current) && User.current.allowed_to?(:manage_issue_relations, issue.project) && User.current.allowed_to?(:add_issues, issue.project) %>
+  <p class="cosmosys-item-operations contextual">
+    <%= link_to l(:label_cosmosys_req_derive), cosmosys_req_derive_path(issue), class: 'icon icon-copy' %>
+  </p>
+<% end %>

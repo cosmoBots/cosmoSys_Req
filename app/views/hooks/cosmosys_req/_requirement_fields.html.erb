@@ -1,0 +1,46 @@
+<% if issue.cosmosys_requirement? %>
+  <fieldset class="box cosmosys-req-fields" data-cosmosys-req-management="<%= issue.cosmosys_req_management? %>">
+    <legend><%= l(:label_cosmosys_req_fields) %></legend>
+    <div class="splitcontent">
+      <div class="splitcontentleft">
+        <p><%= form.select :requirement_type, CosmosysReq::IssuePatch::TYPES.map { |value| [l("label_cosmosys_req_type_#{value}"), value] }, required: true %></p>
+        <p><%= form.select :requirement_level, CosmosysReq::IssuePatch::LEVELS.map { |value| [l("label_cosmosys_req_level_#{value}"), value] }, required: true %></p>
+        <p><%= form.text_field :requirement_sources %></p>
+        <p><%= form.text_field :requirement_variable %></p>
+        <p><%= form.text_field :requirement_value %></p>
+      </div>
+      <div class="splitcontentright">
+        <p><%= form.select :requirement_compliance_state,
+                        CosmosysReq::IssuePatch::COMPLIANCE_STATES.map { |value| [l("label_cosmosys_req_compliance_#{value}"), value] },
+                        include_blank: true %></p>
+        <p><%= form.collection_select :requirement_verification_method_values,
+                                   CosmosysReq::IssuePatch::VERIFICATION_METHODS,
+                                   :to_s,
+                                   ->(value) { l("label_cosmosys_req_verification_#{value}") },
+                                   {}, multiple: true, size: 5 %></p>
+        <% if issue.cosmosys_req_release_tracking? %>
+          <p><%= form.select :requirement_implementation_progress,
+                          CosmosysReq::IssuePatch::IMPLEMENTATION_PROGRESS.map { |value| [l("label_cosmosys_req_progress_#{value}"), value] },
+                          include_blank: true %></p>
+        <% end %>
+      </div>
+    </div>
+    <p><%= form.text_area :requirement_rationale, rows: 4, class: 'wiki-edit' %></p>
+    <p><%= form.text_area :requirement_verification_description, rows: 4, class: 'wiki-edit' %></p>
+    <p><%= form.text_area :requirement_compliance_justification, rows: 4, class: 'wiki-edit' %></p>
+  </fieldset>
+  <% unless issue.cosmosys_req_management? %>
+    <script>
+      (function() {
+        function hideTaskManagementFields() {
+        ['issue_assigned_to_id', 'issue_start_date', 'issue_due_date', 'issue_estimated_hours', 'issue_done_ratio'].forEach(function(id) {
+          var field = document.getElementById(id);
+          if (field && field.closest('p')) field.closest('p').hidden = true;
+        });
+        }
+        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', hideTaskManagementFields);
+        else hideTaskManagementFields();
+      })();
+    </script>
+  <% end %>
+<% end %>

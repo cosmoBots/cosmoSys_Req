@@ -36,8 +36,8 @@ class CreateCosmosysRequirements < ActiveRecord::Migration[6.1]
     approved = ensure_status('Approved', closed: true)
 
     tracker_ids = TRACKERS.map do |key, name|
-      tracker = tracker_class.find_by(cosmosys_key: key) || tracker_class.where('LOWER(name) = ?', name.downcase).first || tracker_class.new
-      tracker.assign_attributes(name: name, cosmosys_key: key, cosmosys_item_kind: 'requirement', default_status_id: draft.id)
+      tracker = tracker_class.find_by(csys_key: key) || tracker_class.where('LOWER(name) = ?', name.downcase).first || tracker_class.new
+      tracker.assign_attributes(name: name, csys_key: key, csys_item_kind: 'requirement', default_status_id: draft.id)
       tracker.save!
       reset_requirement_workflow(tracker.id, draft.id, stable.id, approved.id)
       tracker.id
@@ -51,13 +51,13 @@ class CreateCosmosysRequirements < ActiveRecord::Migration[6.1]
           requirement_verification_methods = COALESCE(requirement_verification_methods, '["to_be_defined"]')
       WHERE tracker_id IN (#{tracker_ids.join(', ')})
     SQL
-    if table_exists?(:projects_trackers) && column_exists?(:projects, :cosmosys_project_profile)
+    if table_exists?(:projects_trackers) && column_exists?(:projects, :csys_project_profile)
       tracker_ids.each do |tracker_id|
         execute <<~SQL.squish
           INSERT INTO projects_trackers (project_id, tracker_id)
           SELECT projects.id, #{tracker_id}
           FROM projects
-          WHERE projects.cosmosys_project_profile = 'requirements'
+          WHERE projects.csys_project_profile = 'requirements'
             AND NOT EXISTS (
               SELECT 1 FROM projects_trackers
               WHERE projects_trackers.project_id = projects.id
@@ -70,7 +70,7 @@ class CreateCosmosysRequirements < ActiveRecord::Migration[6.1]
 
   def down
     TRACKERS.reverse_each do |key, _name|
-      tracker = tracker_class.find_by(cosmosys_key: key)
+      tracker = tracker_class.find_by(csys_key: key)
       next unless tracker
 
       execute "DELETE FROM workflows WHERE tracker_id = #{tracker.id}" if table_exists?(:workflows)

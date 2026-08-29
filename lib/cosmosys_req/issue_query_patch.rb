@@ -2,24 +2,35 @@ require_dependency 'issue_query'
 
 module CosmosysReq
   module IssueQueryPatch
+    class RichTextQueryColumn < QueryColumn
+      def cosmosys_report_rich_text?
+        true
+      end
+    end
+
     COLUMNS = {
-      requirement_type: :field_requirement_type,
-      requirement_level: :field_requirement_level,
-      requirement_sources: :field_requirement_sources,
-      requirement_variable: :field_requirement_variable,
-      requirement_value: :field_requirement_value,
-      requirement_compliance_state: :field_requirement_compliance_state,
-      requirement_implementation_progress: :field_requirement_implementation_progress,
-      requirement_derivation_source: :field_requirement_derivation_source
+      requirement_type: { caption: :field_requirement_type },
+      requirement_level: { caption: :field_requirement_level },
+      requirement_rationale: { caption: :field_requirement_rationale, rich_text: true },
+      requirement_sources: { caption: :field_requirement_sources },
+      requirement_variable: { caption: :field_requirement_variable },
+      requirement_value: { caption: :field_requirement_value },
+      requirement_verification_method_values: { caption: :field_requirement_verification_methods, sortable: false },
+      requirement_verification_description: { caption: :field_requirement_verification_description, rich_text: true },
+      requirement_compliance_state: { caption: :field_requirement_compliance_state },
+      requirement_compliance_justification: { caption: :field_requirement_compliance_justification, rich_text: true },
+      requirement_implementation_progress: { caption: :field_requirement_implementation_progress },
+      requirement_derivation_source: { caption: :field_requirement_derivation_source, sortable: false }
     }.freeze
 
     def self.prepended(base)
-      COLUMNS.each do |name, caption|
+      COLUMNS.each do |name, definition|
         next if base.available_columns.any? { |column| column.name == name }
 
-        options = { caption: caption }
-        options[:sortable] = "#{Issue.table_name}.#{name}" unless name == :requirement_derivation_source
-        base.available_columns << QueryColumn.new(name, **options)
+        options = { caption: definition.fetch(:caption) }
+        options[:sortable] = "#{Issue.table_name}.#{name}" unless definition[:sortable] == false
+        column_class = definition[:rich_text] ? RichTextQueryColumn : QueryColumn
+        base.available_columns << column_class.new(name, **options)
       end
     end
 

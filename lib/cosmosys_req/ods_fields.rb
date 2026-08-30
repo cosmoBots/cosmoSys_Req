@@ -30,6 +30,22 @@ module CosmosysReq
           issue.requirement_verification_method_values = value.to_s.split(/[\r\n,]+/).map(&:strip).reject(&:blank?) if issue.cosmosys_requirement?
         end
       )
+
+      return if Cosmosys::OdsItemFieldRegistry.names.include?('requirement_derivation_source')
+
+      Cosmosys::OdsItemFieldRegistry.register(
+        'requirement_derivation_source',
+        reader: ->(issue) { issue.cosmosys_requirement? ? issue.requirement_derivation_source&.csid : nil },
+        writer: lambda do |issue, value|
+          next unless issue.cosmosys_requirement?
+
+          issue.requirement_derivation_source = if value.to_s.strip.empty?
+                                                  nil
+                                                else
+                                                  issue.project.issues.find_by!(csid: value.to_s.strip)
+                                                end
+        end
+      )
     end
   end
 end

@@ -60,17 +60,15 @@ unless Cosmosys::ProjectProfileRegistry.registered?('requirements')
     default_disabled_modules: %w[calendar time_tracking news gantt files].freeze,
     required_modules: %w[issue_tracking documents].freeze,
     default_report_columns: %w[
-      tracker status rq_type rq_level author assigned_to
-      rq_compl_state
+      tracker status rq_type rq_level rq_rationale
     ].freeze,
     default_report_field_presentations: {
       'rq_type' => 'metadata',
       'rq_level' => 'metadata',
-      'rq_compl_state' => 'metadata'
+      'rq_rationale' => 'section'
     }.freeze,
     default_item_list_columns: %w[
-      chapter_label subject tracker status priority assigned_to updated_on
-      rq_type rq_level rq_compl_state
+      chapter_label subject tracker status rq_type rq_level rq_rationale priority
     ].freeze
   )
 end

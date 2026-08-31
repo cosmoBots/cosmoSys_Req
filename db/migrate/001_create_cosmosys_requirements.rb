@@ -1,18 +1,30 @@
 class CreateCosmosysRequirements < ActiveRecord::Migration[6.1]
   REQUIREMENT_COLUMNS = {
-    requirement_type: :string,
-    requirement_level: :string,
-    requirement_rationale: :text,
-    requirement_sources: :text,
-    requirement_variable: :string,
-    requirement_value: :string,
-    requirement_verification_methods: :text,
-    requirement_verification_description: :text,
-    requirement_compliance_state: :string,
-    requirement_compliance_justification: :text,
-    requirement_implementation_progress: :string,
-    requirement_derivation_source_id: :bigint
+    rq_type: :string,
+    rq_level: :string,
+    rq_rationale: :text,
+    rq_srcs: :text,
+    rq_var: :string,
+    rq_value: :string,
+    rq_verif_methods: :text,
+    rq_verif_description: :text,
+    rq_compl_state: :string,
+    rq_compl_justif: :text,
+    rq_implem_progress: :string,
+    rq_deriv_src_id: :bigint
   }.freeze
+
+  # Development schemas may still contain the columns created by an earlier
+  # rewrite of this same base migration. They are deliberately removed rather
+  # than aliased: this project is still in its regenerable-schema phase and the
+  # compact rq_* vocabulary is the only supported contract.
+  OBSOLETE_REQUIREMENT_COLUMNS = %i[
+    requirement_type requirement_level requirement_rationale requirement_sources
+    requirement_variable requirement_value requirement_verification_methods
+    requirement_verification_description requirement_compliance_state
+    requirement_compliance_justification requirement_implementation_progress
+    requirement_derivation_source_id
+  ].freeze
 
   TRACKERS = [
     ['requirement', 'csRq'],
@@ -22,14 +34,18 @@ class CreateCosmosysRequirements < ActiveRecord::Migration[6.1]
   ].freeze
 
   def up
+    OBSOLETE_REQUIREMENT_COLUMNS.reverse_each do |name|
+      remove_column :issues, name if column_exists?(:issues, name)
+    end
+
     REQUIREMENT_COLUMNS.each do |name, type|
       add_column :issues, name, type unless column_exists?(:issues, name)
     end
-    add_index :issues, :requirement_type unless index_exists?(:issues, :requirement_type)
-    add_index :issues, :requirement_level unless index_exists?(:issues, :requirement_level)
-    add_index :issues, :requirement_compliance_state unless index_exists?(:issues, :requirement_compliance_state)
-    add_index :issues, :requirement_implementation_progress unless index_exists?(:issues, :requirement_implementation_progress)
-    add_index :issues, :requirement_derivation_source_id unless index_exists?(:issues, :requirement_derivation_source_id)
+    add_index :issues, :rq_type unless index_exists?(:issues, :rq_type)
+    add_index :issues, :rq_level unless index_exists?(:issues, :rq_level)
+    add_index :issues, :rq_compl_state unless index_exists?(:issues, :rq_compl_state)
+    add_index :issues, :rq_implem_progress unless index_exists?(:issues, :rq_implem_progress)
+    add_index :issues, :rq_deriv_src_id unless index_exists?(:issues, :rq_deriv_src_id)
 
     draft = ensure_status('Draft', closed: false)
     stable = ensure_status('Stable', closed: false)
@@ -45,10 +61,10 @@ class CreateCosmosysRequirements < ActiveRecord::Migration[6.1]
     execute <<~SQL.squish
       UPDATE issues
       SET status_id = #{draft.id},
-          requirement_type = COALESCE(requirement_type, 'complex'),
-          requirement_level = COALESCE(requirement_level, 'system'),
-          requirement_compliance_state = COALESCE(requirement_compliance_state, 'to_be_confirmed'),
-          requirement_verification_methods = COALESCE(requirement_verification_methods, '["to_be_defined"]')
+          rq_type = COALESCE(rq_type, 'complex'),
+          rq_level = COALESCE(rq_level, 'system'),
+          rq_compl_state = COALESCE(rq_compl_state, 'to_be_confirmed'),
+          rq_verif_methods = COALESCE(rq_verif_methods, '["to_be_defined"]')
       WHERE tracker_id IN (#{tracker_ids.join(', ')})
     SQL
     if table_exists?(:projects_trackers) && column_exists?(:projects, :csys_project_profile)

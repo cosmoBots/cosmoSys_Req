@@ -6,8 +6,8 @@
       <%= select_tag :count, options_for_select((1..4).to_a, params[:count] || 1) %></p>
     <p><%= label_tag :tracker_id, l(:field_tracker) %>
       <%= select_tag :tracker_id, options_from_collection_for_select(@requirement_trackers, :id, :name, params[:tracker_id] || @issue.tracker_id) %></p>
-    <p><%= label_tag :requirement_type, l(:field_requirement_type) %>
-      <%= select_tag :requirement_type, options_for_select(CosmosysReq::IssuePatch::TYPES.map { |value| [l("label_cosmosys_req_type_#{value}"), value] }, params[:requirement_type] || @issue.requirement_type) %></p>
+    <p><%= label_tag :rq_type, l(:field_rq_type) %>
+      <%= select_tag :rq_type, options_for_select(CosmosysReq::IssuePatch::TYPES.map { |value| [l("label_cosmosys_req_type_#{value}"), value] }, params[:rq_type] || @issue.rq_type) %></p>
     <p class="info"><%= l(:text_cosmosys_req_derive_explanation) %></p>
     <p><%= submit_tag l(:button_create) %> <%= link_to l(:button_cancel), issue_path(@issue) %></p>
   <% end %>

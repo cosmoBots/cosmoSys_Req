@@ -27,7 +27,7 @@ module CosmosysReq
         description: :text_cosmosys_req_item_profile,
         provider: :cosmosys_req,
         diagram_shape: 'record',
-        diagram_fill_color: ->(issue, **) { REQUIREMENT_TYPE_COLORS.fetch(issue.requirement_type.to_s, 'white') },
+        diagram_fill_color: ->(issue, **) { REQUIREMENT_TYPE_COLORS.fetch(issue.rq_type.to_s, 'white') },
         diagram_border_color: 'darkgreen',
         reference_mode: 'csid',
         dependency_rankdir: 'TB',
@@ -59,17 +59,17 @@ unless Cosmosys::ProjectProfileRegistry.registered?('requirements')
     ods_export_template: 'plugins/cosmosys_req/assets/templates/ods/requirements_export_template.ods',
     default_disabled_modules: %w[calendar time_tracking news gantt files].freeze,
     default_report_columns: %w[
-      tracker status requirement_type requirement_level author assigned_to
-      requirement_compliance_state
+      tracker status rq_type rq_level author assigned_to
+      rq_compl_state
     ].freeze,
     default_report_field_presentations: {
-      'requirement_type' => 'metadata',
-      'requirement_level' => 'metadata',
-      'requirement_compliance_state' => 'metadata'
+      'rq_type' => 'metadata',
+      'rq_level' => 'metadata',
+      'rq_compl_state' => 'metadata'
     }.freeze,
     default_item_list_columns: %w[
       chapter_label subject tracker status priority assigned_to updated_on
-      requirement_type requirement_level requirement_compliance_state
+      rq_type rq_level rq_compl_state
     ].freeze
   )
 end

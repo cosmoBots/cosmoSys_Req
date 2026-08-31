@@ -3,24 +3,24 @@
     <h3><%= l(:label_cosmosys_req_fields) %></h3>
     <table class="attributes">
       <tbody>
-        <tr><th><%= l(:field_requirement_type) %></th><td><%= issue.requirement_type.present? ? l("label_cosmosys_req_type_#{issue.requirement_type}") : '-' %></td>
-            <th><%= l(:field_requirement_level) %></th><td><%= issue.requirement_level.present? ? l("label_cosmosys_req_level_#{issue.requirement_level}") : '-' %></td></tr>
-        <tr><th><%= l(:field_requirement_sources) %></th><td><%= issue.requirement_sources.presence || '-' %></td>
-            <th><%= l(:field_requirement_variable) %></th><td><%= issue.requirement_variable.presence || '-' %></td></tr>
-        <tr><th><%= l(:field_requirement_value) %></th><td><%= issue.requirement_value.presence || '-' %></td>
-            <th><%= l(:field_requirement_compliance_state) %></th><td><%= issue.requirement_compliance_state.present? ? l("label_cosmosys_req_compliance_#{issue.requirement_compliance_state}") : '-' %></td></tr>
-        <tr><th><%= l(:field_requirement_verification_methods) %></th>
-            <td><%= issue.requirement_verification_method_values.map { |value| l("label_cosmosys_req_verification_#{value}") }.join(', ').presence || '-' %></td>
-            <th><%= l(:field_requirement_derivation_source) %></th>
-            <td><%= issue.requirement_derivation_source ? link_to_issue(issue.requirement_derivation_source) : '-' %></td></tr>
+        <tr><th><%= l(:field_rq_type) %></th><td><%= issue.rq_type.present? ? l("label_cosmosys_req_type_#{issue.rq_type}") : '-' %></td>
+            <th><%= l(:field_rq_level) %></th><td><%= issue.rq_level.present? ? l("label_cosmosys_req_level_#{issue.rq_level}") : '-' %></td></tr>
+        <tr><th><%= l(:field_rq_srcs) %></th><td><%= issue.rq_srcs.presence || '-' %></td>
+            <th><%= l(:field_rq_var) %></th><td><%= issue.rq_var.presence || '-' %></td></tr>
+        <tr><th><%= l(:field_rq_value) %></th><td><%= issue.rq_value.presence || '-' %></td>
+            <th><%= l(:field_rq_compl_state) %></th><td><%= issue.rq_compl_state.present? ? l("label_cosmosys_req_compliance_#{issue.rq_compl_state}") : '-' %></td></tr>
+        <tr><th><%= l(:field_rq_verif_methods) %></th>
+            <td><%= issue.rq_verif_method_values.map { |value| l("label_cosmosys_req_verification_#{value}") }.join(', ').presence || '-' %></td>
+            <th><%= l(:field_rq_deriv_src) %></th>
+            <td><%= issue.rq_deriv_src ? link_to_issue(issue.rq_deriv_src) : '-' %></td></tr>
         <% if issue.cosmosys_req_release_tracking? %>
-          <tr><th><%= l(:field_requirement_implementation_progress) %></th>
-              <td colspan="3"><%= issue.requirement_implementation_progress.present? ? l("label_cosmosys_req_progress_#{issue.requirement_implementation_progress}") : '-' %></td></tr>
+          <tr><th><%= l(:field_rq_implem_progress) %></th>
+              <td colspan="3"><%= issue.rq_implem_progress.present? ? l("label_cosmosys_req_progress_#{issue.rq_implem_progress}") : '-' %></td></tr>
         <% end %>
       </tbody>
     </table>
-    <% if issue.requirement_rationale.present? %><h4><%= l(:field_requirement_rationale) %></h4><%= textilizable(issue, :requirement_rationale) %><% end %>
-    <% if issue.requirement_verification_description.present? %><h4><%= l(:field_requirement_verification_description) %></h4><%= textilizable(issue, :requirement_verification_description) %><% end %>
-    <% if issue.requirement_compliance_justification.present? %><h4><%= l(:field_requirement_compliance_justification) %></h4><%= textilizable(issue, :requirement_compliance_justification) %><% end %>
+    <% if issue.rq_rationale.present? %><h4><%= l(:field_rq_rationale) %></h4><%= textilizable(issue, :rq_rationale) %><% end %>
+    <% if issue.rq_verif_description.present? %><h4><%= l(:field_rq_verif_description) %></h4><%= textilizable(issue, :rq_verif_description) %><% end %>
+    <% if issue.rq_compl_justif.present? %><h4><%= l(:field_rq_compl_justif) %></h4><%= textilizable(issue, :rq_compl_justif) %><% end %>
   </div>
 <% end %>

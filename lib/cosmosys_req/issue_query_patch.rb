@@ -9,18 +9,18 @@ module CosmosysReq
     end
 
     COLUMNS = {
-      requirement_type: { caption: :field_requirement_type },
-      requirement_level: { caption: :field_requirement_level },
-      requirement_rationale: { caption: :field_requirement_rationale, rich_text: true },
-      requirement_sources: { caption: :field_requirement_sources },
-      requirement_variable: { caption: :field_requirement_variable },
-      requirement_value: { caption: :field_requirement_value },
-      requirement_verification_method_values: { caption: :field_requirement_verification_methods, sortable: false },
-      requirement_verification_description: { caption: :field_requirement_verification_description, rich_text: true },
-      requirement_compliance_state: { caption: :field_requirement_compliance_state },
-      requirement_compliance_justification: { caption: :field_requirement_compliance_justification, rich_text: true },
-      requirement_implementation_progress: { caption: :field_requirement_implementation_progress },
-      requirement_derivation_source: { caption: :field_requirement_derivation_source, sortable: false }
+      rq_type: { caption: :field_rq_type },
+      rq_level: { caption: :field_rq_level },
+      rq_rationale: { caption: :field_rq_rationale, rich_text: true },
+      rq_srcs: { caption: :field_rq_srcs },
+      rq_var: { caption: :field_rq_var },
+      rq_value: { caption: :field_rq_value },
+      rq_verif_method_values: { caption: :field_rq_verif_methods, sortable: false },
+      rq_verif_description: { caption: :field_rq_verif_description, rich_text: true },
+      rq_compl_state: { caption: :field_rq_compl_state },
+      rq_compl_justif: { caption: :field_rq_compl_justif, rich_text: true },
+      rq_implem_progress: { caption: :field_rq_implem_progress },
+      rq_deriv_src: { caption: :field_rq_deriv_src, sortable: false }
     }.freeze
 
     def self.prepended(base)
@@ -36,13 +36,13 @@ module CosmosysReq
 
     def initialize_available_filters
       super
-      add_available_filter('requirement_type', type: :list, name: :field_requirement_type,
+      add_available_filter('rq_type', type: :list, name: :field_rq_type,
                            values: CosmosysReq::IssuePatch::TYPES.map { |value| [I18n.t("label_cosmosys_req_type_#{value}"), value] })
-      add_available_filter('requirement_level', type: :list, name: :field_requirement_level,
+      add_available_filter('rq_level', type: :list, name: :field_rq_level,
                            values: CosmosysReq::IssuePatch::LEVELS.map { |value| [I18n.t("label_cosmosys_req_level_#{value}"), value] })
-      add_available_filter('requirement_compliance_state', type: :list, name: :field_requirement_compliance_state,
+      add_available_filter('rq_compl_state', type: :list, name: :field_rq_compl_state,
                            values: CosmosysReq::IssuePatch::COMPLIANCE_STATES.map { |value| [I18n.t("label_cosmosys_req_compliance_#{value}"), value] })
-      add_available_filter('requirement_implementation_progress', type: :list, name: :field_requirement_implementation_progress,
+      add_available_filter('rq_implem_progress', type: :list, name: :field_rq_implem_progress,
                            values: CosmosysReq::IssuePatch::IMPLEMENTATION_PROGRESS.map { |value| [I18n.t("label_cosmosys_req_progress_#{value}"), value] })
     end
   end

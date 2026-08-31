@@ -11,7 +11,7 @@ module CosmosysReq
       tracker = @requirement_trackers.detect { |candidate| candidate.id == params[:tracker_id].to_i }
       raise ActiveRecord::RecordNotFound unless tracker
 
-      type = params[:requirement_type].presence || @issue.requirement_type
+      type = params[:rq_type].presence || @issue.rq_type
       result = Cosmosys::RelatedItemsCreator.new(
         source: @issue,
         count: params[:count],
@@ -19,9 +19,9 @@ module CosmosysReq
         tracker: tracker,
         user: User.current,
         issue_attributes: {
-          requirement_type: type,
-          requirement_level: 'derived',
-          requirement_derivation_source_id: @issue.id
+          rq_type: type,
+          rq_level: 'derived',
+          rq_deriv_src_id: @issue.id
         },
         subject_builder: ->(source, index) { I18n.t(:text_cosmosys_req_derived_subject, number: index + 1, subject: source.subject) }
       ).call

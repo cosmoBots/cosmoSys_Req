@@ -3,31 +3,31 @@
     <legend><%= l(:label_cosmosys_req_fields) %></legend>
     <div class="splitcontent">
       <div class="splitcontentleft">
-        <p><%= form.select :requirement_type, CosmosysReq::IssuePatch::TYPES.map { |value| [l("label_cosmosys_req_type_#{value}"), value] }, required: true %></p>
-        <p><%= form.select :requirement_level, CosmosysReq::IssuePatch::LEVELS.map { |value| [l("label_cosmosys_req_level_#{value}"), value] }, required: true %></p>
-        <p><%= form.text_field :requirement_sources %></p>
-        <p><%= form.text_field :requirement_variable %></p>
-        <p><%= form.text_field :requirement_value %></p>
+        <p><%= form.select :rq_type, CosmosysReq::IssuePatch::TYPES.map { |value| [l("label_cosmosys_req_type_#{value}"), value] }, required: true %></p>
+        <p><%= form.select :rq_level, CosmosysReq::IssuePatch::LEVELS.map { |value| [l("label_cosmosys_req_level_#{value}"), value] }, required: true %></p>
+        <p><%= form.text_field :rq_srcs %></p>
+        <p><%= form.text_field :rq_var %></p>
+        <p><%= form.text_field :rq_value %></p>
       </div>
       <div class="splitcontentright">
-        <p><%= form.select :requirement_compliance_state,
+        <p><%= form.select :rq_compl_state,
                         CosmosysReq::IssuePatch::COMPLIANCE_STATES.map { |value| [l("label_cosmosys_req_compliance_#{value}"), value] },
                         include_blank: true %></p>
-        <p><%= form.collection_select :requirement_verification_method_values,
+        <p><%= form.collection_select :rq_verif_method_values,
                                    CosmosysReq::IssuePatch::VERIFICATION_METHODS,
                                    :to_s,
                                    ->(value) { l("label_cosmosys_req_verification_#{value}") },
                                    {}, multiple: true, size: 5 %></p>
         <% if issue.cosmosys_req_release_tracking? %>
-          <p><%= form.select :requirement_implementation_progress,
+          <p><%= form.select :rq_implem_progress,
                           CosmosysReq::IssuePatch::IMPLEMENTATION_PROGRESS.map { |value| [l("label_cosmosys_req_progress_#{value}"), value] },
                           include_blank: true %></p>
         <% end %>
       </div>
     </div>
-    <p><%= form.text_area :requirement_rationale, rows: 4, class: 'wiki-edit' %></p>
-    <p><%= form.text_area :requirement_verification_description, rows: 4, class: 'wiki-edit' %></p>
-    <p><%= form.text_area :requirement_compliance_justification, rows: 4, class: 'wiki-edit' %></p>
+    <p><%= form.text_area :rq_rationale, rows: 4, class: 'wiki-edit' %></p>
+    <p><%= form.text_area :rq_verif_description, rows: 4, class: 'wiki-edit' %></p>
+    <p><%= form.text_area :rq_compl_justif, rows: 4, class: 'wiki-edit' %></p>
   </fieldset>
   <% unless issue.cosmosys_req_management? %>
     <script>

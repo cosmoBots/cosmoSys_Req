@@ -3,10 +3,10 @@ require_dependency File.expand_path('../../../cosmosys/lib/cosmosys/ods_item_fie
 module CosmosysReq
   module OdsFields
     SCALAR_FIELDS = %w[
-      requirement_type requirement_level requirement_sources requirement_variable
-      requirement_value requirement_rationale requirement_verification_description
-      requirement_compliance_state requirement_compliance_justification
-      requirement_implementation_progress
+      rq_type rq_level rq_srcs rq_var
+      rq_value rq_rationale rq_verif_description
+      rq_compl_state rq_compl_justif
+      rq_implem_progress
     ].freeze
 
     module_function
@@ -21,29 +21,29 @@ module CosmosysReq
         )
       end
 
-      return if Cosmosys::OdsItemFieldRegistry.names.include?('requirement_verification_methods')
+      return if Cosmosys::OdsItemFieldRegistry.names.include?('rq_verif_methods')
 
       Cosmosys::OdsItemFieldRegistry.register(
-        'requirement_verification_methods',
-        reader: ->(issue) { issue.cosmosys_requirement? ? issue.requirement_verification_method_values.join(',') : nil },
+        'rq_verif_methods',
+        reader: ->(issue) { issue.cosmosys_requirement? ? issue.rq_verif_method_values.join(',') : nil },
         writer: lambda do |issue, value|
-          issue.requirement_verification_method_values = value.to_s.split(/[\r\n,]+/).map(&:strip).reject(&:blank?) if issue.cosmosys_requirement?
+          issue.rq_verif_method_values = value.to_s.split(/[\r\n,]+/).map(&:strip).reject(&:blank?) if issue.cosmosys_requirement?
         end
       )
 
-      return if Cosmosys::OdsItemFieldRegistry.names.include?('requirement_derivation_source')
+      return if Cosmosys::OdsItemFieldRegistry.names.include?('rq_deriv_src')
 
       Cosmosys::OdsItemFieldRegistry.register(
-        'requirement_derivation_source',
-        reader: ->(issue) { issue.cosmosys_requirement? ? issue.requirement_derivation_source&.csid : nil },
+        'rq_deriv_src',
+        reader: ->(issue) { issue.cosmosys_requirement? ? issue.rq_deriv_src&.csid : nil },
         writer: lambda do |issue, value|
           next unless issue.cosmosys_requirement?
 
-          issue.requirement_derivation_source = if value.to_s.strip.empty?
-                                                  nil
-                                                else
-                                                  issue.project.issues.find_by!(csid: value.to_s.strip)
-                                                end
+          issue.rq_deriv_src = if value.to_s.strip.empty?
+                                 nil
+                               else
+                                 issue.project.issues.find_by!(csid: value.to_s.strip)
+                               end
         end
       )
     end

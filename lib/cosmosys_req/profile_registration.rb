@@ -58,6 +58,7 @@ unless Cosmosys::ProjectProfileRegistry.registered?('requirements')
     default_root_tracker: 'cs_info',
     ods_export_template: 'plugins/cosmosys_req/assets/templates/ods/requirements_export_template.ods',
     default_disabled_modules: %w[calendar time_tracking news gantt files].freeze,
+    required_modules: %w[issue_tracking documents].freeze,
     default_report_columns: %w[
       tracker status rq_type rq_level author assigned_to
       rq_compl_state

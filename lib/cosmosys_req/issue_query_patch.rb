@@ -11,7 +11,7 @@ module CosmosysReq
     COLUMNS = {
       rq_type: { caption: :field_rq_type },
       rq_level: { caption: :field_rq_level },
-      rq_rationale: { caption: :field_rq_rationale, rich_text: true },
+      rq_rationale: { caption: :field_rq_rationale, rich_text: true, inline: false },
       rq_srcs: { caption: :field_rq_srcs },
       rq_var: { caption: :field_rq_var },
       rq_value: { caption: :field_rq_value },
@@ -29,6 +29,7 @@ module CosmosysReq
 
         options = { caption: definition.fetch(:caption) }
         options[:sortable] = "#{Issue.table_name}.#{name}" unless definition[:sortable] == false
+        options[:inline] = definition[:inline] if definition.key?(:inline)
         column_class = definition[:rich_text] ? RichTextQueryColumn : QueryColumn
         base.available_columns << column_class.new(name, **options)
       end

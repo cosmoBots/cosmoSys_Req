@@ -37,7 +37,8 @@ module CosmosysReq
         allowed_parent_profiles: %w[info].freeze,
         dsm_mode: 'all',
         closed_presentation: 'consolidated',
-        allow_unsuccessful_closure_when_blocked: true
+        allow_unsuccessful_closure_when_blocked: true,
+        validate_blocking_maturity: true
       )
     end
   end

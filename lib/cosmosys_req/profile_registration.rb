@@ -35,7 +35,8 @@ module CosmosysReq
         can_split: false,
         aggregate_children: false,
         allowed_parent_profiles: %w[info].freeze,
-        dsm_mode: 'all'
+        dsm_mode: 'all',
+        closed_presentation: 'consolidated'
       )
     end
   end

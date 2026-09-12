@@ -7,8 +7,10 @@
             <th><%= l(:field_rq_level) %></th><td><%= issue.rq_level.present? ? l("label_cosmosys_req_level_#{issue.rq_level}") : '-' %></td></tr>
         <tr><th><%= l(:field_rq_srcs) %></th><td><%= issue.rq_srcs.presence || '-' %></td>
             <th><%= l(:field_rq_var) %></th><td><%= issue.rq_var.presence || '-' %></td></tr>
-        <tr><th><%= l(:field_rq_value) %></th><td><%= issue.rq_value.presence || '-' %></td>
-            <th><%= l(:field_rq_compl_state) %></th><td><%= issue.rq_compl_state.present? ? l("label_cosmosys_req_compliance_#{issue.rq_compl_state}") : '-' %></td></tr>
+        <tr><th><%= l(:field_rq_var_name) %></th><td><%= issue.rq_var_name.presence || '-' %></td>
+            <th><%= l(:field_rq_value) %></th><td><%= issue.rq_value.presence || '-' %></td></tr>
+        <tr>
+            <th><%= l(:field_rq_compl_state) %></th><td colspan="3"><%= issue.rq_compl_state.present? ? l("label_cosmosys_req_compliance_#{issue.rq_compl_state}") : '-' %></td></tr>
         <tr><th><%= l(:field_rq_verif_methods) %></th>
             <td><%= issue.rq_verif_method_values.map { |value| l("label_cosmosys_req_verification_#{value}") }.join(', ').presence || '-' %></td>
             <th><%= l(:field_rq_deriv_src) %></th>

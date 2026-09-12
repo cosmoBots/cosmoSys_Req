@@ -7,6 +7,7 @@
         <p><%= form.select :rq_level, CosmosysReq::IssuePatch::LEVELS.map { |value| [l("label_cosmosys_req_level_#{value}"), value] }, required: true %></p>
         <p><%= form.text_field :rq_srcs %></p>
         <p><%= form.text_field :rq_var %></p>
+        <p><%= form.text_field :rq_var_name %></p>
         <p><%= form.text_field :rq_value %></p>
       </div>
       <div class="splitcontentright">

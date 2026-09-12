@@ -3,7 +3,7 @@ require_dependency File.expand_path('../../../cosmosys/lib/cosmosys/ods_item_fie
 module CosmosysReq
   module OdsFields
     SCALAR_FIELDS = %w[
-      rq_type rq_level rq_srcs rq_var
+      rq_type rq_level rq_srcs rq_var rq_var_name
       rq_value rq_rationale rq_verif_description
       rq_compl_state rq_compl_justif
       rq_implem_progress

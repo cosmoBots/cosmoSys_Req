@@ -91,3 +91,4 @@ module CosmosysReq
 end
 
 Issue.include(CosmosysReq::IssuePatch) unless Issue < CosmosysReq::IssuePatch
+Cosmosys::ProjectCopyReferenceRegistry.register(:rq_deriv_src_id)

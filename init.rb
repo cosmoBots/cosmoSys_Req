@@ -19,8 +19,10 @@ require_dependency File.expand_path('lib/cosmosys_req/variable_dictionary', __di
 require_dependency File.expand_path('lib/cosmosys_req/issue_patch', __dir__)
 require_dependency File.expand_path('lib/cosmosys_req/ods_fields', __dir__)
 require_dependency File.expand_path('lib/cosmosys_req/issue_query_patch', __dir__)
-require_dependency File.expand_path('lib/cosmosys_req/application_helper_patch', __dir__)
 require_dependency File.expand_path('lib/cosmosys_req/hooks', __dir__)
-require_dependency 'application_helper'
 
-ApplicationHelper.prepend(CosmosysReq::ApplicationHelperPatch) unless ApplicationHelper < CosmosysReq::ApplicationHelperPatch
+Cosmosys::PresentationTextRegistry.register(:requirement_variables) do |text, project:, user:, formatter:|
+  CosmosysReq::VariableDictionary.new(project: project, user: user).resolve(text) do |value|
+    formatter ? formatter.call(value) : value
+  end
+end

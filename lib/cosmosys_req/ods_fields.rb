@@ -36,6 +36,8 @@ module CosmosysReq
       Cosmosys::OdsItemFieldRegistry.register(
         'rq_deriv_src',
         reader: ->(issue) { issue.cosmosys_requirement? ? issue.rq_deriv_src&.csid : nil },
+        deferred: true,
+        remapper: ->(value, context) { context.fetch(:csid_map, {}).fetch(value.to_s, value) },
         writer: lambda do |issue, value|
           next unless issue.cosmosys_requirement?
 

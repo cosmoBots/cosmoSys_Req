@@ -39,7 +39,8 @@ module CosmosysReq
         closed_presentation: 'consolidated',
         allow_unsuccessful_closure_when_blocked: true,
         validate_blocking_maturity: true,
-        physical_delete_policy: 'admin_only'
+        physical_delete_policy: 'admin_only',
+        approved_presentation_baseline: true
       )
     end
   end

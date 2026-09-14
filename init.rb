@@ -23,6 +23,10 @@ require_dependency File.expand_path('lib/cosmosys_req/hooks', __dir__)
 
 Cosmosys::PresentationTextRegistry.register(:requirement_variables) do |text, project:, user:, formatter:|
   CosmosysReq::VariableDictionary.new(project: project, user: user).resolve(text) do |value|
-    formatter ? formatter.call(value) : value
+    if formatter
+      %(<em class="cosmosys-requirement-variable">#{formatter.call(value)}</em>)
+    else
+      value
+    end
   end
 end

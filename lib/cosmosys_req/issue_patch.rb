@@ -9,7 +9,7 @@ module CosmosysReq
     IMPLEMENTATION_PROGRESS = %w[included validated].freeze
     SAFE_ATTRIBUTES = %w[
       rq_type rq_level rq_rationale rq_srcs
-      rq_var rq_var_name rq_value rq_verif_method_values
+      rq_verif_method_values
       rq_verif_description rq_compl_state
       rq_compl_justif rq_implem_progress
     ].freeze
@@ -23,9 +23,7 @@ module CosmosysReq
                  foreign_key: :rq_deriv_src_id,
                  dependent: :nullify
         before_validation :cosmosys_req_apply_defaults, on: :create
-        before_validation :cosmosys_req_normalize_variable
         validate :cosmosys_req_validate_fields
-        validate :cosmosys_req_validate_variable_uniqueness
         validate :cosmosys_req_validate_derivation_source
       end
     end
@@ -75,22 +73,6 @@ module CosmosysReq
       if rq_implem_progress.present? && !IMPLEMENTATION_PROGRESS.include?(rq_implem_progress)
         errors.add(:rq_implem_progress, :inclusion)
       end
-      errors.add(:rq_var, :invalid) if rq_var.present? && !rq_var.match?(/\A[A-Za-z][A-Za-z0-9_]*\z/)
-    end
-
-    def cosmosys_req_normalize_variable
-      self.rq_var = rq_var.to_s.strip.presence if cosmosys_requirement?
-    end
-
-    def cosmosys_req_validate_variable_uniqueness
-      return unless cosmosys_requirement? && rq_var.present? && project&.persisted?
-
-      scope = Issue.joins(:tracker)
-                   .where(project_id: project.root.self_and_descendants.select(:id))
-                   .where(trackers: { csys_item_kind: 'requirement' })
-                   .where('LOWER(issues.rq_var) = ?', rq_var.downcase)
-      scope = scope.where.not(id: id) if persisted?
-      errors.add(:rq_var, I18n.t(:error_rq_var_taken_in_project_tree)) if scope.exists?
     end
 
     def validates_rq_value(attribute, values, required: false)

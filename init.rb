@@ -15,18 +15,7 @@ require_dependency 'issue'
 require_dependency 'tracker'
 require_dependency File.expand_path('lib/cosmosys_req/profile_registration', __dir__)
 require_dependency File.expand_path('lib/cosmosys_req/tracker_capabilities', __dir__)
-require_dependency File.expand_path('lib/cosmosys_req/variable_dictionary', __dir__)
 require_dependency File.expand_path('lib/cosmosys_req/issue_patch', __dir__)
 require_dependency File.expand_path('lib/cosmosys_req/ods_fields', __dir__)
 require_dependency File.expand_path('lib/cosmosys_req/issue_query_patch', __dir__)
 require_dependency File.expand_path('lib/cosmosys_req/hooks', __dir__)
-
-Cosmosys::PresentationTextRegistry.register(:requirement_variables) do |text, project:, user:, formatter:|
-  CosmosysReq::VariableDictionary.new(project: project, user: user).resolve(text) do |value|
-    if formatter
-      %(<em class="cosmosys-requirement-variable">#{formatter.call(value)}</em>)
-    else
-      value
-    end
-  end
-end

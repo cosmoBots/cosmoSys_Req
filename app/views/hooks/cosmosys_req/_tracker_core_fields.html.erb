@@ -1,0 +1,21 @@
+<% if controller_name == 'trackers' && defined?(@tracker) && @tracker&.persisted? &&
+      CosmosysReq::TrackerCapabilities::DEFINITIONS.key?(@tracker.csys_key.to_s) &&
+      !@tracker.cosmosys_req_management? %>
+  <script>
+    (function() {
+      function removeRequirementManagementOptions() {
+        var fields = <%= raw CosmosysReq::TrackerCapabilities::MANAGEMENT_FIELDS.to_json %>;
+        fields.forEach(function(field) {
+          var input = document.querySelector('input[name="tracker[core_fields][]"][value="' + field + '"]');
+          var option = input && input.closest('label.block');
+          if (option) option.remove();
+        });
+      }
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', removeRequirementManagementOptions);
+      } else {
+        removeRequirementManagementOptions();
+      }
+    })();
+  </script>
+<% end %>

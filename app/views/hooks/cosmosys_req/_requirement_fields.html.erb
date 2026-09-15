@@ -11,11 +11,14 @@
         <p><%= form.select :rq_compl_state,
                         CosmosysReq::IssuePatch::COMPLIANCE_STATES.map { |value| [l("label_cosmosys_req_compliance_#{value}"), value] },
                         include_blank: true %></p>
-        <p><%= form.collection_select :rq_verif_method_values,
-                                   CosmosysReq::IssuePatch::VERIFICATION_METHODS,
-                                   :to_s,
-                                   ->(value) { l("label_cosmosys_req_verification_#{value}") },
-                                   {}, multiple: true, size: 5 %></p>
+        <p>
+          <%= form.label :rq_verif_method_values, l(:field_rq_verif_method_values) %>
+          <%= form.collection_select :rq_verif_method_values,
+                                     CosmosysReq::IssuePatch::VERIFICATION_METHODS,
+                                     :to_s,
+                                     ->(value) { l("label_cosmosys_req_verification_#{value}") },
+                                     {}, multiple: true, size: 5 %>
+        </p>
         <% if issue.cosmosys_req_release_tracking? %>
           <p><%= form.select :rq_implem_progress,
                           CosmosysReq::IssuePatch::IMPLEMENTATION_PROGRESS.map { |value| [l("label_cosmosys_req_progress_#{value}"), value] },
@@ -27,18 +30,4 @@
     <p><%= form.text_area :rq_verif_description, rows: 4, class: 'wiki-edit' %></p>
     <p><%= form.text_area :rq_compl_justif, rows: 4, class: 'wiki-edit' %></p>
   </fieldset>
-  <% unless issue.cosmosys_req_management? %>
-    <script>
-      (function() {
-        function hideTaskManagementFields() {
-        ['issue_assigned_to_id', 'issue_start_date', 'issue_due_date', 'issue_estimated_hours', 'issue_done_ratio'].forEach(function(id) {
-          var field = document.getElementById(id);
-          if (field && field.closest('p')) field.closest('p').hidden = true;
-        });
-        }
-        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', hideTaskManagementFields);
-        else hideTaskManagementFields();
-      })();
-    </script>
-  <% end %>
 <% end %>

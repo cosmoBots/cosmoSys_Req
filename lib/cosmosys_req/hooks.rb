@@ -5,5 +5,7 @@ module CosmosysReq
     render_on :view_issues_show_description_bottom,
       { partial: 'hooks/cosmosys_req/requirement_details' },
       { partial: 'hooks/cosmosys_req/requirement_operations' }
+    render_on :view_layouts_base_body_bottom,
+      { partial: 'hooks/cosmosys_req/tracker_core_fields' }
   end
 end

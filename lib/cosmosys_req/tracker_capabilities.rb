@@ -1,5 +1,6 @@
 module CosmosysReq
   module TrackerCapabilities
+    MANAGEMENT_FIELDS = %w[assigned_to_id start_date due_date estimated_hours done_ratio].freeze
     DEFINITIONS = {
       'requirement' => { management: false, release_tracking: false },
       'requirement_management' => { management: true, release_tracking: false },
@@ -17,6 +18,12 @@ module CosmosysReq
 
     def cosmosys_req_release_tracking?
       cosmosys_req_capabilities[:release_tracking]
+    end
+
+    def core_fields=(fields)
+      normalized = Array(fields).map(&:to_s)
+      normalized -= MANAGEMENT_FIELDS if DEFINITIONS.key?(csys_key.to_s) && !cosmosys_req_management?
+      super(normalized)
     end
   end
 end

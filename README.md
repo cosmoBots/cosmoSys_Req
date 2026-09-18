@@ -15,7 +15,7 @@ specialised capabilities on top of it.
 
 This is not a new project created by this repository. It is a refactoring and
 continuation of the earlier
-[`cosmosys_reqABANDONED`](https://github.com/cosmoBots/cosmosys_reqABANDONED)
+[`cosmosys_req_archived`](https://github.com/cosmoBots/cosmosys_req_archived)
 and [`cosmosys_req_rm`](https://github.com/cosmoBots/cosmosys_req_rm) Redmine
 plugins. That line of development runs from the first historical commit on 19
 June 2019 through the current 2026 refactoring. The repository history was

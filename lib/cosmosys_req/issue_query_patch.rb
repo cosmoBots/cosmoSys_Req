@@ -39,6 +39,7 @@ module CosmosysReq
                            values: CosmosysReq::IssuePatch::TYPES.map { |value| [I18n.t("label_cosmosys_req_type_#{value}"), value] })
       add_available_filter('rq_level', type: :list, name: :field_rq_level,
                            values: CosmosysReq::IssuePatch::LEVELS.map { |value| [I18n.t("label_cosmosys_req_level_#{value}"), value] })
+      add_available_filter('rq_rationale', type: :text, name: :field_rq_rationale)
       add_available_filter('rq_compl_state', type: :list, name: :field_rq_compl_state,
                            values: CosmosysReq::IssuePatch::COMPLIANCE_STATES.map { |value| [I18n.t("label_cosmosys_req_compliance_#{value}"), value] })
       add_available_filter('rq_implem_progress', type: :list, name: :field_rq_implem_progress,

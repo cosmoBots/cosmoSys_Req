@@ -116,14 +116,38 @@ schema is not yet backward-compatible by design, so back up the database
 before upgrading. cosmoSys-Req also depends on the cosmoSys base, so upgrade
 cosmoSys to the required version in the same maintenance window.
 
-### Deployment with Docker Compose (optional)
+## Installation with Docker Compose
 
-If you prefer a packaged, reproducible deployment instead of installing into
-an existing Redmine, the same sister project as cosmoSys provides a Docker
-Compose stack with a variant that includes cosmoSys-Req (pinned plugin
-revisions, health checks, backups and restore scripts). It is currently being
-published at <https://github.com/cosmoBots/cosmoSys_deploy> and should be
-available there shortly.
+For a reproducible Docker installation, use the separate
+[`cosmoSys_deploy`](https://github.com/cosmoBots/cosmoSys_deploy) repository.
+Its Requirements variant installs Redmine, cosmoSys and cosmoSys-Req together
+at compatible pinned revisions. The Compose stack runs their migrations and
+bootstrap and provides health checks, backups and update/restore scripts. You
+do not need to install either plugin manually in that deployment.
+
+Clone the deployment repository, create its environment file and set the
+required database, Redmine secret and initial administrator credentials as
+described in its [README](https://github.com/cosmoBots/cosmoSys_deploy#configure):
+
+```bash
+git clone https://github.com/cosmoBots/cosmoSys_deploy.git
+cd cosmoSys_deploy
+cp .env.example .env
+# Edit .env and replace the required example credentials.
+```
+
+To start the Requirements variant, include both Compose files:
+
+```bash
+docker compose -f compose.yml -f compose.requirements.yml build
+docker compose -f compose.yml -f compose.requirements.yml up -d
+```
+
+The deployment repository's
+[Requirements variant instructions](https://github.com/cosmoBots/cosmoSys_deploy#requirements-variant)
+cover its full configuration and operational procedures. For a Redmine
+installation managed outside this Compose deployment, follow the classic
+installation instructions above instead.
 
 ## Repository
 

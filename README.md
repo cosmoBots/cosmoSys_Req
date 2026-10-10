@@ -11,6 +11,8 @@ engineering-grade reports. It is free, open source, and has no per-seat limits.
 cosmoSys provides the shared base; domain extensions such as cosmoSys-Req add
 specialised capabilities on top of it.
 
+You can find more information about cosmoSys-Req in the [cosmoBots.eu site](https://cosmobots.eu/projects/csys-req/wiki)
+
 ## Project history
 
 This is not a new project created by this repository. It is a refactoring and

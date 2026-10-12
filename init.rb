@@ -8,7 +8,7 @@ Redmine::Plugin.register :cosmosys_req do
   url 'https://github.com/cosmoBots/cosmoSys_Req'
   author_url 'https://cosmobots.eu'
 
-  requires_redmine_plugin :cosmosys, version_or_higher: '0.1.5'
+  requires_redmine_plugin :cosmosys, version_or_higher: '0.1.7'
 end
 
 require_dependency 'issue'

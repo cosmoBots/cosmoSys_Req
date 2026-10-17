@@ -16,6 +16,7 @@ require_dependency 'tracker'
 require_dependency File.expand_path('lib/cosmosys_req/profile_registration', __dir__)
 require_dependency File.expand_path('lib/cosmosys_req/tracker_capabilities', __dir__)
 require_dependency File.expand_path('lib/cosmosys_req/issue_patch', __dir__)
+require_dependency File.expand_path('lib/cosmosys_req/snapshot_baseline_rebuilder', __dir__)
 require_dependency File.expand_path('lib/cosmosys_req/ods_fields', __dir__)
 require_dependency File.expand_path('lib/cosmosys_req/issue_query_patch', __dir__)
 require_dependency File.expand_path('lib/cosmosys_req/hooks', __dir__)

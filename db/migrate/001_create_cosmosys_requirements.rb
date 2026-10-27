@@ -52,34 +52,26 @@ class CreateCosmosysRequirements < ActiveRecord::Migration[6.1]
     approved = ensure_status('Approved', closed: true)
 
     tracker_ids = TRACKERS.map do |key, name|
-      tracker = tracker_class.find_by(csys_key: key) || tracker_class.where('LOWER(name) = ?', name.downcase).first || tracker_class.new
+      tracker = tracker_class.find_by(csys_key: key) || tracker_class.where(tracker_class.arel_table[:name].lower.eq(name.downcase)).first || tracker_class.new
       tracker.assign_attributes(name: name, csys_key: key, csys_item_kind: 'requirement', default_status_id: draft.id)
       tracker.save!
       reset_requirement_workflow(tracker.id, draft.id, stable.id, approved.id)
       tracker.id
     end
-    execute <<~SQL.squish
-      UPDATE issues
-      SET status_id = #{draft.id},
-          rq_type = COALESCE(rq_type, 'complex'),
-          rq_level = COALESCE(rq_level, 'system'),
-          rq_compl_state = COALESCE(rq_compl_state, 'to_be_confirmed'),
-          rq_verif_methods = COALESCE(rq_verif_methods, '["to_be_defined"]')
-      WHERE tracker_id IN (#{tracker_ids.join(', ')})
-    SQL
+    issues = issue_class.where(tracker_id: tracker_ids)
+    issues.update_all(status_id: draft.id)
+    {
+      rq_type: 'complex', rq_level: 'system',
+      rq_compl_state: 'to_be_confirmed', rq_verif_methods: '["to_be_defined"]'
+    }.each do |attribute, value|
+      issues.where(attribute => nil).update_all(attribute => value)
+    end
     if table_exists?(:projects_trackers) && column_exists?(:projects, :csys_project_profile)
-      tracker_ids.each do |tracker_id|
-        execute <<~SQL.squish
-          INSERT INTO projects_trackers (project_id, tracker_id)
-          SELECT projects.id, #{tracker_id}
-          FROM projects
-          WHERE projects.csys_project_profile = 'requirements'
-            AND NOT EXISTS (
-              SELECT 1 FROM projects_trackers
-              WHERE projects_trackers.project_id = projects.id
-                AND projects_trackers.tracker_id = #{tracker_id}
-            )
-        SQL
+      project_class = Class.new(ActiveRecord::Base) { self.table_name = 'projects' }
+      project_class.where(csys_project_profile: 'requirements').find_each do |project|
+        tracker_ids.each do |tracker_id|
+          assignment_class.find_or_create_by!(project_id: project.id, tracker_id: tracker_id)
+        end
       end
     end
   end
@@ -89,8 +81,11 @@ class CreateCosmosysRequirements < ActiveRecord::Migration[6.1]
       tracker = tracker_class.find_by(csys_key: key)
       next unless tracker
 
-      execute "DELETE FROM workflows WHERE tracker_id = #{tracker.id}" if table_exists?(:workflows)
-      tracker.destroy! unless select_value("SELECT 1 FROM issues WHERE tracker_id = #{tracker.id} LIMIT 1")
+      workflow_class.where(tracker_id: tracker.id).delete_all if table_exists?(:workflows)
+      unless issue_class.where(tracker_id: tracker.id).exists?
+        assignment_class.where(tracker_id: tracker.id).delete_all
+        tracker.destroy!
+      end
     end
 
     REQUIREMENT_COLUMNS.keys.reverse_each do |name|
@@ -99,6 +94,24 @@ class CreateCosmosysRequirements < ActiveRecord::Migration[6.1]
   end
 
   private
+
+  def issue_class
+    @issue_class ||= Class.new(ActiveRecord::Base) { self.table_name = 'issues' }.tap(&:reset_column_information)
+  end
+
+  def assignment_class
+    @assignment_class ||= Class.new(ActiveRecord::Base) do
+      self.table_name = 'projects_trackers'
+      self.primary_key = nil
+    end
+  end
+
+  def workflow_class
+    @workflow_class ||= Class.new(ActiveRecord::Base) do
+      self.table_name = 'workflows'
+      self.inheritance_column = :_disabled_type
+    end
+  end
 
   def tracker_class
     @tracker_class ||= Class.new(ActiveRecord::Base) { self.table_name = 'trackers' }.tap(&:reset_column_information)
@@ -109,7 +122,7 @@ class CreateCosmosysRequirements < ActiveRecord::Migration[6.1]
   end
 
   def ensure_status(name, closed:)
-    status = status_class.where('LOWER(name) = ?', name.downcase).first || status_class.new
+    status = status_class.where(status_class.arel_table[:name].lower.eq(name.downcase)).first || status_class.new
     status.name = name
     status.is_closed = closed
     status.position ||= status_class.maximum(:position).to_i + 1
@@ -120,8 +133,9 @@ class CreateCosmosysRequirements < ActiveRecord::Migration[6.1]
   def reset_requirement_workflow(tracker_id, draft_id, stable_id, approved_id)
     return unless table_exists?(:workflows)
 
-    execute "DELETE FROM workflows WHERE tracker_id = #{tracker_id}"
-    role_ids = select_values('SELECT id FROM roles WHERE builtin = 0')
+    workflow_class.where(tracker_id: tracker_id).delete_all
+    role_class = Class.new(ActiveRecord::Base) { self.table_name = 'roles' }
+    role_ids = role_class.where(builtin: 0).pluck(:id)
     transitions = [
       [draft_id, draft_id], [draft_id, stable_id],
       [stable_id, draft_id], [stable_id, stable_id], [stable_id, approved_id],
@@ -129,10 +143,11 @@ class CreateCosmosysRequirements < ActiveRecord::Migration[6.1]
     ]
     role_ids.each do |role_id|
       transitions.each do |old_status_id, new_status_id|
-        execute <<~SQL.squish
-          INSERT INTO workflows (type, tracker_id, role_id, old_status_id, new_status_id, author, assignee)
-          VALUES ('WorkflowTransition', #{tracker_id}, #{role_id}, #{old_status_id}, #{new_status_id}, #{connection.quoted_false}, #{connection.quoted_false})
-        SQL
+        workflow_class.create!(
+          type: 'WorkflowTransition', tracker_id: tracker_id, role_id: role_id,
+          old_status_id: old_status_id, new_status_id: new_status_id,
+          author: false, assignee: false
+        )
       end
     end
   end

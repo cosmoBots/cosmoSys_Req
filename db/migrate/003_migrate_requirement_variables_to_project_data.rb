@@ -33,7 +33,7 @@ class MigrateRequirementVariablesToProjectData < ActiveRecord::Migration[6.1]
     RELEASED_LEGACY_COLUMNS.each do |column, type|
       add_column :issues, column, type unless column_exists?(:issues, column)
     end
-    add_index :issues, 'LOWER(rq_var)', name: 'index_issues_on_lower_rq_var', where: 'rq_var IS NOT NULL' unless index_exists?(:issues, name: 'index_issues_on_lower_rq_var')
+    add_index :issues, :rq_var unless index_exists?(:issues, :rq_var)
     Issue.reset_column_information
 
     datum_tracker_ids = Tracker.where(csys_item_kind: 'datum').pluck(:id)
@@ -71,23 +71,23 @@ class MigrateRequirementVariablesToProjectData < ActiveRecord::Migration[6.1]
   def legacy_sources
     return [] unless column_exists?(:issues, :rq_var) && column_exists?(:issues, :rq_value)
 
-    quoted = connection.quote_column_name('rq_var')
-    name_projection = column_exists?(:issues, :rq_var_name) ? 'rq_var_name' : 'NULL AS rq_var_name'
-    rows = connection.select_all(<<~SQL.squish)
-      SELECT id, project_id, author_id, csid, rq_var, #{name_projection}, rq_value
-      FROM issues
-      WHERE #{quoted} IS NOT NULL AND TRIM(#{quoted}) <> ''
-      ORDER BY id
-    SQL
-    rows.map do |row|
+    record_class = Class.new(ActiveRecord::Base) { self.table_name = 'issues' }
+    attributes = %i[id project_id author_id csid rq_var rq_value]
+    has_name = column_exists?(:issues, :rq_var_name)
+    attributes << :rq_var_name if has_name
+    rows = record_class.where.not(rq_var: nil).select(*attributes).order(:id)
+    rows.filter_map do |row|
+      key = row.rq_var.to_s.strip
+      next if key.empty?
+
       Source.new(
-        id: row.fetch('id').to_i,
-        project_id: row.fetch('project_id').to_i,
-        author_id: row.fetch('author_id').to_i,
-        csid: row.fetch('csid'),
-        key: row.fetch('rq_var').to_s.strip,
-        name: row.fetch('rq_var_name').to_s.strip.presence,
-        value: row.fetch('rq_value')
+        id: row.id,
+        project_id: row.project_id,
+        author_id: row.author_id,
+        csid: row.csid,
+        key: key,
+        name: has_name ? row.rq_var_name.to_s.strip.presence : nil,
+        value: row.rq_value
       )
     end
   end
@@ -127,7 +127,7 @@ class MigrateRequirementVariablesToProjectData < ActiveRecord::Migration[6.1]
     existing = Issue.joins(:tracker)
                     .where(project_id: project.root.self_and_descendants.select(:id))
                     .where(trackers: { csys_item_kind: 'datum' })
-                    .where('LOWER(issues.csid) = ?', source.key.downcase)
+                    .where(Issue.arel_table[:csid].lower.eq(source.key.downcase))
                     .first
     raise "Datum #{source.key} already exists and cannot be reconciled during schema migration" if existing
 

@@ -4,11 +4,11 @@ Redmine::Plugin.register :cosmosys_req do
   name 'cosmoSys Requirements'
   author 'cosmoBots.eu'
   description 'Requirements domain extension for cosmoSys.'
-  version '0.3.3'
+  version '0.3.4'
   url 'https://github.com/cosmoBots/cosmoSys_Req'
   author_url 'https://cosmobots.eu'
 
-  requires_redmine_plugin :cosmosys, version_or_higher: '0.1.10'
+  requires_redmine_plugin :cosmosys, version_or_higher: '0.2.4'
 end
 
 require_dependency 'issue'

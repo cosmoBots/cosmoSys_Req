@@ -18,6 +18,30 @@ specialised capabilities on top of it.
 
 You can find more information about cosmoSys-Req in the [cosmoBots.eu site](https://cosmobots.eu/projects/csys-req/wiki)
 
+## ODS import and export
+
+The requirements template uses clean column headers: `type`, `level`, `srcs`,
+`rationale`, `verif_methods`, `verif_description`, `compl_state`, `compl_justif`,
+`implem_progress` and `deriv_src`. Internal Issue attributes still use `rq_`;
+prefixed ODS headers are rejected, with no import aliases.
+
+This plugin owns the `DictReq` sheet, independently of the base `Dict` sheet:
+
+| Column | Header | Accepted values |
+| --- | --- | --- |
+| A | `level` | `external`, `shared`, `system`, `derived` |
+| B | `type` | `complex`, `optical`, `mechanical`, `hardware`, `software` |
+
+The template's dropdowns reference these ranges. The exporter fills their
+catalog values from the same constants as model validation and preserves the
+template's headers and validations. Unused rows have no prefilled
+tracker, status, level or type. For a new item, select its tracker; leaving
+type and level empty uses the model defaults (`complex` and `system`).
+The shipped template is `assets/templates/ods/requirements_export_template.ods`;
+you can edit its presentation in Calc while preserving its headers, dictionary
+sheet names, selectors, formulas and control sheets. These capabilities use
+the accompanying cosmoSys ODS registry changes; this is not a new release.
+
 ## Project history
 
 This is not a new project created by this repository. It is a refactoring and

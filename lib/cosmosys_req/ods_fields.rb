@@ -1,4 +1,5 @@
 require_dependency File.expand_path('../../../cosmosys/lib/cosmosys/ods_item_field_registry', __dir__)
+require_relative 'requirement_values'
 
 module CosmosysReq
   module OdsFields
@@ -7,6 +8,10 @@ module CosmosysReq
       rq_compl_state rq_compl_justif
       rq_implem_progress
     ].freeze
+    DICTIONARIES = {
+      'rq_level' => { dictionary_sheet: 'DictReq', dictionary_column: 1, choices: RequirementValues::LEVELS }.freeze,
+      'rq_type' => { dictionary_sheet: 'DictReq', dictionary_column: 2, choices: RequirementValues::TYPES }.freeze
+    }.freeze
 
     module_function
 
@@ -16,7 +21,9 @@ module CosmosysReq
 
         Cosmosys::OdsItemFieldRegistry.register(
           name,
-          writer: ->(issue, value) { issue.public_send("#{name}=", value.presence) if issue.cosmosys_requirement? }
+          header: name.delete_prefix('rq_'),
+          writer: ->(issue, value) { issue.public_send("#{name}=", value.presence) if issue.cosmosys_requirement? },
+          **DICTIONARIES.fetch(name, {})
         )
       end
 
@@ -24,6 +31,7 @@ module CosmosysReq
 
       Cosmosys::OdsItemFieldRegistry.register(
         'rq_verif_methods',
+        header: 'verif_methods',
         reader: ->(issue) { issue.cosmosys_requirement? ? issue.rq_verif_method_values.join(',') : nil },
         writer: lambda do |issue, value|
           issue.rq_verif_method_values = value.to_s.split(/[\r\n,]+/).map(&:strip).reject(&:blank?) if issue.cosmosys_requirement?
@@ -34,6 +42,7 @@ module CosmosysReq
 
       Cosmosys::OdsItemFieldRegistry.register(
         'rq_deriv_src',
+        header: 'deriv_src',
         reader: ->(issue) { issue.cosmosys_requirement? ? issue.rq_deriv_src&.csid : nil },
         deferred: true,
         remapper: ->(value, context) { context.fetch(:csid_map, {}).fetch(value.to_s, value) },

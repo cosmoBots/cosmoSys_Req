@@ -1,9 +1,10 @@
 require 'json'
+require_relative 'requirement_values'
 
 module CosmosysReq
   module IssuePatch
-    TYPES = %w[complex optical mechanical hardware software].freeze
-    LEVELS = %w[external shared system derived].freeze
+    TYPES = RequirementValues::TYPES
+    LEVELS = RequirementValues::LEVELS
     VERIFICATION_METHODS = %w[to_be_defined design analysis test inspection].freeze
     COMPLIANCE_STATES = %w[to_be_confirmed not_compliant partially_compliant compliant not_applicable].freeze
     IMPLEMENTATION_PROGRESS = %w[included validated].freeze

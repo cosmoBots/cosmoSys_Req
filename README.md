@@ -1,9 +1,10 @@
 # cosmoSys-Req
 
-Version: **0.3.4**.
+Version **0.3.5**.
 
 This version uses Rails/ActiveRecord/Arel for database access and historical
-migrations, and requires the database-portability fixes in cosmoSys 0.2.4.
+migrations. This release requires cosmoSys 0.2.8 and includes the clean ODS
+headers and dedicated requirement dictionaries developed after 0.3.4.
 
 Requirements-domain extension for [cosmoSys](https://github.com/cosmoBots/cosmoSys),
 a free and open source plugin for Redmine.
@@ -65,7 +66,7 @@ cosmoSys-Req requires the [cosmoSys](https://github.com/cosmoBots/cosmoSys)
 plugin. Both are licensed under GPLv3 by cosmoBots.eu.
 
 It is developed and validated against **Redmine 7.0.1** (Rails 8). It declares
-`requires_redmine_plugin :cosmosys, version_or_higher: '0.2.4'`, so Redmine
+`requires_redmine_plugin :cosmosys, version_or_higher: '0.2.8'`, so Redmine
 refuses to start it unless the installed `cosmosys` version satisfies that
 constraint. Earlier Redmine major versions are not supported.
 

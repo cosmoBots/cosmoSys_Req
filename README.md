@@ -1,10 +1,12 @@
 # cosmoSys-Req
 
-Version **0.3.5**.
+Development version **0.3.5-dirty** (after release 0.3.5).
 
 This version uses Rails/ActiveRecord/Arel for database access and historical
-migrations. This release requires cosmoSys 0.2.8 and includes the clean ODS
+migrations. It requires cosmoSys 0.2.8 and includes the clean ODS
 headers and dedicated requirement dictionaries developed after 0.3.4.
+The development template includes visual refinements and a hidden `DictReq`
+sheet, with export/import integration verified unchanged.
 
 Requirements-domain extension for [cosmoSys](https://github.com/cosmoBots/cosmoSys),
 a free and open source plugin for Redmine.

@@ -1,5 +1,9 @@
 # cosmoSys-Req
 
+> **PRODUCTION:** cosmoSys Requirements is intended for production use on the
+> supported Redmine/cosmoSys versions and documented configurations. Optional
+> experimental extensions do not share this production status.
+
 Development version **0.3.5-dirty** (after release 0.3.5).
 
 This version uses Rails/ActiveRecord/Arel for database access and historical
@@ -58,9 +62,10 @@ erase or replace the project's earlier history and authorship.
 
 ## Status
 
-This repository contains an early alpha artifact. It is suitable for controlled
-evaluation and is not yet declared production-ready. You can install it and try
-it, but expect breaking changes.
+cosmoSys Requirements is a production plugin, not an early-alpha evaluation
+artifact. Production upgrades must follow the documented compatibility
+requirements, validation and backup procedures. Other cosmoSys extensions and
+integrations remain experimental unless explicitly stated otherwise.
 
 ## Requirements
 
@@ -145,10 +150,11 @@ RAILS_ENV=production bundle exec rake redmine:plugins:migrate NAME=cosmosys_req
 # restart Redmine
 ```
 
-The migration base is developed fast and the project is still in alpha: the
-schema is not yet backward-compatible by design, so back up the database
-before upgrading. cosmoSys-Req also depends on the cosmoSys base, so upgrade
-cosmoSys to the required version in the same maintenance window.
+Back up the database and validate the documented upgrade path before upgrading.
+Follow release-specific migration instructions; returning to an earlier image
+does not undo schema changes and may require restoring the matching backup.
+cosmoSys-Req depends on the cosmoSys base, so upgrade cosmoSys to the required
+version in the same maintenance window.
 
 ## Installation with Docker Compose
 

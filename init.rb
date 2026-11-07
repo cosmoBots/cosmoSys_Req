@@ -4,7 +4,7 @@ Redmine::Plugin.register :cosmosys_req do
   name 'cosmoSys Requirements'
   author 'cosmoBots.eu'
   description 'Requirements domain extension for cosmoSys.'
-  version '0.3.5-dirty'
+  version '0.3.6'
   url 'https://github.com/cosmoBots/cosmoSys_Req'
   author_url 'https://cosmobots.eu'
 

@@ -4,13 +4,13 @@
 > supported Redmine/cosmoSys versions and documented configurations. Optional
 > experimental extensions do not share this production status.
 
-Development version **0.3.5-dirty** (after release 0.3.5).
+Version **0.3.6**.
 
 This version uses Rails/ActiveRecord/Arel for database access and historical
 migrations. It requires cosmoSys 0.2.8 and includes the clean ODS
 headers and dedicated requirement dictionaries developed after 0.3.4.
-The development template includes visual refinements and a hidden `DictReq`
-sheet, with export/import integration verified unchanged.
+The ODS template includes visual refinements and a hidden `DictReq` sheet.
+Column headers, formulas and the export/import contract are unchanged.
 
 Requirements-domain extension for [cosmoSys](https://github.com/cosmoBots/cosmoSys),
 a free and open source plugin for Redmine.
@@ -47,7 +47,7 @@ type and level empty uses the model defaults (`complex` and `system`).
 The shipped template is `assets/templates/ods/requirements_export_template.ods`;
 you can edit its presentation in Calc while preserving its headers, dictionary
 sheet names, selectors, formulas and control sheets. These capabilities use
-the accompanying cosmoSys ODS registry changes; this is not a new release.
+the accompanying cosmoSys ODS registry support.
 
 ## Project history
 

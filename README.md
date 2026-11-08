@@ -6,11 +6,6 @@
 
 Version **0.3.6**.
 
-This version uses Rails/ActiveRecord/Arel for database access and historical
-migrations. It requires cosmoSys 0.2.8 and includes the clean ODS
-headers and dedicated requirement dictionaries developed after 0.3.4.
-The ODS template includes visual refinements and a hidden `DictReq` sheet.
-Column headers, formulas and the export/import contract are unchanged.
 
 Requirements-domain extension for [cosmoSys](https://github.com/cosmoBots/cosmoSys),
 a free and open source plugin for Redmine.
@@ -27,27 +22,23 @@ You can find more information about cosmoSys-Req in the [cosmoBots.eu site](http
 
 ## ODS import and export
 
-The requirements template uses clean column headers: `type`, `level`, `srcs`,
+The requirements template uses these column headers: `type`, `level`, `srcs`,
 `rationale`, `verif_methods`, `verif_description`, `compl_state`, `compl_justif`,
-`implem_progress` and `deriv_src`. Internal Issue attributes still use `rq_`;
-prefixed ODS headers are rejected, with no import aliases.
+`implem_progress` and `deriv_src`. Preserve them when editing the template.
 
-This plugin owns the `DictReq` sheet, independently of the base `Dict` sheet:
+The `DictReq` dictionary sheet supplies the dropdown values:
 
 | Column | Header | Accepted values |
 | --- | --- | --- |
 | A | `level` | `external`, `shared`, `system`, `derived` |
 | B | `type` | `complex`, `optical`, `mechanical`, `hardware`, `software` |
 
-The template's dropdowns reference these ranges. The exporter fills their
-catalog values from the same constants as model validation and preserves the
-template's headers and validations. Unused rows have no prefilled
-tracker, status, level or type. For a new item, select its tracker; leaving
-type and level empty uses the model defaults (`complex` and `system`).
+Unused rows have no prefilled tracker, status, level or type. For a new item,
+select its tracker; leaving type and level empty uses the defaults
+(`complex` and `system`).
 The shipped template is `assets/templates/ods/requirements_export_template.ods`;
 you can edit its presentation in Calc while preserving its headers, dictionary
-sheet names, selectors, formulas and control sheets. These capabilities use
-the accompanying cosmoSys ODS registry support.
+sheet names, selectors, formulas and control sheets.
 
 ## Project history
 

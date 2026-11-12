@@ -4,7 +4,7 @@
 > supported Redmine/cosmoSys versions and documented configurations. Optional
 > experimental extensions do not share this production status.
 
-Version **0.3.6**.
+Version **0.3.7-dirty** (development).
 
 
 Requirements-domain extension for [cosmoSys](https://github.com/cosmoBots/cosmoSys),
